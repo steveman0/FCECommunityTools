@@ -344,19 +344,19 @@ namespace FortressCraft.Community
 				returnitem = NewInstance(item);
 				returnitem.SetAmount(remainder);
 			}
-			foreach (ItemBase i in targetlist)
+			if (item.IsStack())
 			{
-				if (i.IsStackAndSame(item))
+				foreach (ItemBase i in targetlist)
 				{
-					i.IncrementStack(itemcount);
-					break;
-				}
-				else
-				{
-					targetlist.Add(item);
-					break;
+					if (i.IsStackAndSame(item))
+					{
+						i.IncrementStack(itemcount);
+						break;
+					}
 				}
 			}
+			else
+				targetlist.Add(item);
 			return returnitem;
 		}
 
