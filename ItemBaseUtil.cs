@@ -18,12 +18,12 @@ namespace FortressCraft.Community
 		public static Boolean CompareDeep(this ItemBase original, ItemBase comparer)
 		{
 			return original.Compare(comparer) && (
-				   original.As<ItemCubeStack>().Compare(comparer.As<ItemCubeStack>()) ||
-				   original.As<ItemDurability>().Compare(comparer.As<ItemDurability>()) ||
-				   original.As<ItemStack>().Compare(comparer.As<ItemStack>()) ||
-				   original.As<ItemSingle>().Compare(comparer.As<ItemSingle>()) ||
-				   original.As<ItemCharge>().Compare(comparer.As<ItemCharge>()) ||
-				   original.As<ItemLocation>().Compare(comparer.As<ItemLocation>())
+					original.As<ItemCubeStack>().Compare(comparer.As<ItemCubeStack>()) ||
+					original.As<ItemDurability>().Compare(comparer.As<ItemDurability>()) ||
+					original.As<ItemStack>().Compare(comparer.As<ItemStack>()) ||
+					original.As<ItemSingle>().Compare(comparer.As<ItemSingle>()) ||
+					original.As<ItemCharge>().Compare(comparer.As<ItemCharge>()) ||
+					original.As<ItemLocation>().Compare(comparer.As<ItemLocation>())
 				);
 		}
 
@@ -49,7 +49,7 @@ namespace FortressCraft.Community
 		{
 			// We'll ignore the original stacks for now. May revisit in the future
 			return original != null && comparer != null && original.Compare(comparer.As<ItemBase>()) &&
-				   original.mCubeType == comparer.mCubeType && original.mCubeValue == comparer.mCubeValue;
+					original.mCubeType == comparer.mCubeType && original.mCubeValue == comparer.mCubeValue;
 			// && original.mnAmount == comparer.mnAmount;
 		}
 
@@ -62,8 +62,8 @@ namespace FortressCraft.Community
 		public static bool Compare(this ItemDurability original, ItemDurability comparer)
 		{
 			return original != null && comparer != null && original.Compare(comparer.As<ItemBase>()) &&
-				   original.mnCurrentDurability == comparer.mnCurrentDurability &&
-				   original.mnMaxDurability == comparer.mnMaxDurability;
+					original.mnCurrentDurability == comparer.mnCurrentDurability &&
+					original.mnMaxDurability == comparer.mnMaxDurability;
 		}
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace FortressCraft.Community
 		public static bool Compare(this ItemCharge original, ItemCharge comparer)
 		{
 			return original != null && comparer != null && original.Compare(comparer.As<ItemBase>()) &&
-				   FloatTolerance(original.mChargeLevel, comparer.mChargeLevel, 0.1f);
+					FloatTolerance(original.mChargeLevel, comparer.mChargeLevel, 0.1f);
 		}
 
 		/// <summary>
@@ -113,14 +113,14 @@ namespace FortressCraft.Community
 		public static bool Compare(this ItemLocation original, ItemLocation comparer)
 		{
 			return original != null &&
-				   comparer != null &&
-				   original.Compare(comparer.As<ItemBase>()) &&
-				   original.mLocX == comparer.mLocX &&
-				   original.mLocY == comparer.mLocY &&
-				   original.mLocZ == comparer.mLocZ &&
-				   FloatTolerance(original.mLookVector.x, comparer.mLookVector.x, 0.1f) &&
-				   FloatTolerance(original.mLookVector.y, comparer.mLookVector.y, 0.1f) &&
-				   FloatTolerance(original.mLookVector.z, comparer.mLookVector.z, 0.1f);
+					comparer != null &&
+					original.Compare(comparer.As<ItemBase>()) &&
+					original.mLocX == comparer.mLocX &&
+					original.mLocY == comparer.mLocY &&
+					original.mLocZ == comparer.mLocZ &&
+					FloatTolerance(original.mLookVector.x, comparer.mLookVector.x, 0.1f) &&
+					FloatTolerance(original.mLookVector.y, comparer.mLookVector.y, 0.1f) &&
+					FloatTolerance(original.mLookVector.z, comparer.mLookVector.z, 0.1f);
 			//				original.mLookVector.x == comparer.mLookVector.x &&
 			//				original.mLookVector.y == comparer.mLookVector.y && 
 			//				original.mLookVector.z == comparer.mLookVector.z;
@@ -147,7 +147,7 @@ namespace FortressCraft.Community
 			if (!item.IsStack() || !comparer.IsStack())
 				return false;
 			return item.As<ItemCubeStack>().Compare(comparer.As<ItemCubeStack>()) ||
-			       item.As<ItemStack>().Compare(item.As<ItemStack>());
+					item.As<ItemStack>().Compare(item.As<ItemStack>());
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@ namespace FortressCraft.Community
 			if (!item.IsStack())
 				return;
 			if (item.mType == ItemType.ItemCubeStack)
-					item.As<ItemCubeStack>().mnAmount -= amount;
+				item.As<ItemCubeStack>().mnAmount -= amount;
 			if (item.mType == ItemType.ItemStack)
 				item.As<ItemStack>().mnAmount -= amount;
 		}
@@ -185,14 +185,16 @@ namespace FortressCraft.Community
 		/// </summary>
 		/// <param name="item">The Item Stack</param>
 		/// <param name="amount">The amount of Items</param>
-		public static void SetAmount(this ItemBase item, Int32 amount)
+		/// <returns>The item with updated amount</returns>
+		public static ItemBase SetAmount(this ItemBase item, Int32 amount)
 		{
 			if (!item.IsStack())
-				return;
+				return item;
 			if (item.mType == ItemType.ItemCubeStack)
 				item.As<ItemCubeStack>().mnAmount = amount;
 			if (item.mType == ItemType.ItemStack)
 				item.As<ItemStack>().mnAmount = amount;
+			return item;
 		}
 
 		/// <summary>
@@ -318,7 +320,188 @@ namespace FortressCraft.Community
 			var diff = Math.Abs(f1 * tolerance);
 			return Math.Abs(f1 - f2) <= diff;
 		}
-		
-	}
 
+
+		/// <summary>
+		///     Adds an ItemBase to a list, consolidating stacks - obeys list storage capacity by returning excess items
+		/// </summary>
+		/// <param name="item">The item to add to the list</param>
+		/// <param name="targetlist">The list to transfer it to</param>
+		/// <param name="storagecapacity">The list's storage capacity</param>
+		/// <returns>The remaining items that do not fit in the list</returns>
+		public static ItemBase AddListItem(this ItemBase item, ref List<ItemBase> targetlist, int storagecapacity = int.MaxValue)
+		{
+			int remainder = 0;
+			int listcount = targetlist.GetItemCount();
+			int itemcount = item.GetAmount();
+			int newtotal = listcount + itemcount;
+			ItemBase returnitem = null;
+			if (newtotal > storagecapacity)
+			{
+				remainder = newtotal - storagecapacity;
+				itemcount -= remainder;
+				item.SetAmount(itemcount);
+				returnitem = NewInstance(item);
+				returnitem.SetAmount(remainder);
+			}
+			foreach (ItemBase i in targetlist)
+			{
+				if (i.IsStackAndSame(item))
+				{
+					i.IncrementStack(itemcount);
+					break;
+				}
+				else
+				{
+					targetlist.Add(item);
+					break;
+				}
+			}
+			return returnitem;
+		}
+
+
+		/// <summary>
+		///     Adds an ItemBase to a list, consolidating stacks - obeys list storage capacity by returning excess items
+		/// </summary>
+		/// <param name="targetlist">The list to transfer it to</param>
+		/// <param name="item">The item to add to the list</param>
+		/// <param name="storagecapacity">The list's storage capacity</param>
+		/// <returns>The remaining items that do not fit in the list</returns>
+		public static ItemBase AddListItem(this List<ItemBase> targetlist, ItemBase item, int storagecapacity = int.MaxValue)
+		{
+			return AddListItem(item, ref targetlist, storagecapacity);
+		}
+
+		/// <summary>
+		///     Deduct an item from an item list by example
+		/// </summary>
+		/// <param name="item">The example item to attempt to remove from the list</param>
+		/// <param name="fromlist">The list to take the item from</param>
+		/// <param name="returnpartialstack">If true returns partial stack when insufficient stack size found</param>
+		/// <returns>The ItemBase object or null if unavailable</returns>
+		public static ItemBase TakeListItem(this ItemBase item, ref List<ItemBase> fromlist, bool returnpartialstack)
+		{
+			if (item.IsStack())
+			{
+				int itemcount = item.GetAmount();
+				int listitemcount;
+				foreach (ItemBase i in fromlist)
+				{
+					listitemcount = i.GetAmount();
+					if (i.Compare(item) && listitemcount > itemcount)
+					{
+						i.DecrementStack(itemcount);
+						return item;
+					}
+					else if (i.Compare(item) && listitemcount == itemcount)
+					{
+						fromlist.Remove(i);
+						return item;
+					}
+					else if (returnpartialstack)
+					{
+						item.SetAmount(listitemcount);
+						return item;
+					}
+					else
+						return null;
+				}
+			}
+			else
+				foreach (ItemBase i in fromlist)
+				{
+					if (i.Compare(item))
+					{
+						fromlist.Remove(i);
+						return i;
+					}
+				}
+			return null;
+		}
+
+		/// <summary>
+		///     Moves specified amount of any items from one list to another obeying target storage capacity.
+		/// </summary>
+		/// <param name="fromlist">Source list of items</param>
+		/// <param name="tolist">Target list of items</param>
+		/// <param name="amount">Quantity of items to move</param>
+		/// <param name="StorageCapacity">Storage capacity of target item list</param>
+		/// <param name="takefirstitem">Moves only the first item found</param>
+		public static void TakeAnyListItem(ref List<ItemBase> fromlist, ref List<ItemBase> tolist, int amount, int StorageCapacity, bool takefirstitem)
+		{
+			int listcount;
+			int freespace;
+			if (amount <= 0)
+			{
+				return;
+			}
+			foreach (ItemBase i in fromlist)
+			{
+				listcount = i.GetAmount();
+				freespace = StorageCapacity - tolist.GetItemCount();
+				if (i.IsStack())
+				{
+					if (listcount > amount)
+					{
+						if (amount > freespace)
+						{
+							tolist.AddListItem(NewInstance(i).SetAmount(freespace));
+							i.DecrementStack(freespace);
+							return;
+						}
+						else
+						{
+							tolist.AddListItem(NewInstance(i).SetAmount(amount));
+							i.DecrementStack(amount);
+							return;
+						}
+					}
+					else if (listcount == amount)
+					{
+						if (amount > freespace)
+						{
+							tolist.AddListItem(NewInstance(i).SetAmount(freespace));
+							fromlist.Remove(i);
+							return;
+						}
+						else
+						{
+							tolist.AddListItem(NewInstance(i).SetAmount(amount));
+							fromlist.Remove(i);
+							return;
+						}
+					}
+					else
+					{
+						if (listcount > freespace)
+						{
+							tolist.AddListItem(NewInstance(i).SetAmount(freespace));
+							fromlist.Remove(i);
+							return;
+						}
+						else
+						{
+							tolist.AddListItem(NewInstance(i).SetAmount(listcount));
+							fromlist.Remove(i);
+							amount -= listcount;
+						}
+					}
+				}
+				else
+				{
+					if (freespace > 0)
+					{
+						tolist.AddListItem(NewInstance(i));
+						fromlist.Remove(i);
+						amount--;
+					}
+					else
+						return;
+				}
+				if (takefirstitem)
+					break;
+			}
+		}
+	}
 }
