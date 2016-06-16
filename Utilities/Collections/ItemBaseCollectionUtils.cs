@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace FortressCraft.Community.Utilities
 {
@@ -62,5 +63,268 @@ namespace FortressCraft.Community.Utilities
 			var cube = restraints.As<ItemCubeStack>();
 			return items.GetItemCount(cube.mCubeType, cube.mCubeValue);
 		}
-	}
+
+
+        /// <summary>
+        ///     Adds an ItemBase to a list, consolidating stacks - obeys list storage capacity by returning excess items
+        /// </summary>
+        /// <param name="item">The item to add to the list</param>
+        /// <param name="targetlist">The list to transfer it to</param>
+        /// <param name="returnpartialstack">If true returns partial stack when insufficient stack size found</param>
+        /// <param name="storagecapacity">The list's storage capacity</param>
+        /// <returns>The remaining items that do not fit in the list</returns>
+        public static ItemBase AddListItem(this ItemBase item, ref List<ItemBase> targetlist, bool returnpartialstack, int storagecapacity = int.MaxValue)
+        {
+            if (item == null)
+            {
+                Debug.LogError("AddListItem attempted to add a null item!");
+                return null;
+            }
+            List<ItemBase> workingtarget = targetlist.ToList();
+            int remainder = 0;
+            int listcount = workingtarget.GetItemCount();
+            int itemcount = item.GetAmount();
+            int newtotal = listcount + itemcount;
+            ItemBase returnitem = null;
+            if (newtotal > storagecapacity)
+            {
+                remainder = newtotal - storagecapacity;
+                itemcount -= remainder;
+                item.SetAmount(itemcount);
+                returnitem = NewInstance(item);
+                returnitem.SetAmount(remainder);
+            }
+            int listlength = workingtarget.Count;
+            for (int index = 0; index <= listlength; index++)
+            {
+                if (index != listlength)
+                {
+                    if (workingtarget[index].IsStackAndSame(item))
+                    {
+                        workingtarget[index].IncrementStack(itemcount);
+                        item = null;
+                        break;
+                    }
+                }
+                else
+                {
+                    workingtarget.Add(NewInstance(item));
+                    item = null;
+                    break;
+                }
+            }
+            targetlist = workingtarget;
+            return returnitem;
+        }
+
+        /// <summary>
+        ///     Deduct an item from an item list by example
+        /// </summary>
+        /// <param name="item">The example item to attempt to remove from the list</param>
+        /// <param name="sourcelist">The list to take the item from</param>
+        /// <param name="returnpartialstack">If true returns partial stack when insufficient stack size found</param>
+        /// <returns>The ItemBase object or null if unavailable</returns>
+        public static ItemBase RemoveListItem(this ItemBase item, ref List<ItemBase> sourcelist, bool returnpartialstack)
+        {
+            if (item == null)
+            {
+                Debug.LogError("RemoveListItem attempted to remove a null item from a list");
+                return null;
+            }
+            List<ItemBase> workingsource = sourcelist.ToList();
+            if (item.IsStack())
+            {
+                int itemcount = item.GetAmount();
+                int listitemcount;
+
+                for (int index = 0; index < workingsource.Count; index++)
+                {
+                    ItemBase i = workingsource[index];
+                    listitemcount = i.GetAmount();
+                    if (i.Compare(item) && listitemcount > itemcount)
+                    {
+                        i.DecrementStack(itemcount);
+                        sourcelist = workingsource;
+                        return NewInstance(item);
+                    }
+                    else if (i.Compare(item) && listitemcount == itemcount)
+                    {
+                        workingsource.Remove(i);
+                        sourcelist = workingsource;
+                        return NewInstance(item);
+                    }
+                    else if (returnpartialstack)
+                    {
+                        item.SetAmount(listitemcount);
+                        sourcelist = workingsource;
+                        return NewInstance(item);
+                    }
+                }
+            }
+            else
+                for (int index = 0; index < workingsource.Count; index++)
+                {
+                    ItemBase i = workingsource[index];
+                    if (i.Compare(item))
+                    {
+                        workingsource.Remove(i);
+                        sourcelist = workingsource;
+                        return i;
+                    }
+                }
+            sourcelist = workingsource;
+            return null;
+        }
+
+        /// <summary>
+        ///     Moves specified amount of any items from one list to another obeying target storage capacity.
+        /// </summary>
+        /// <param name="sourcelist">Source list of items</param>
+        /// <param name="targetlist">Target list of items</param>
+        /// <param name="amount">Quantity of items to move</param>
+        /// <param name="StorageCapacity">Storage capacity of target item list</param>
+        /// <param name="takefirstitem">Moves only the first item found</param>
+        /// <param name="whiteblacklist">A list of items to server as a whitelist or blacklist for transferring</param>
+        /// <param name="iswhitelist">True if whitelist otherwise treat as a blacklist</param>
+        public static void MoveItems(ref List<ItemBase> sourcelist, ref List<ItemBase> targetlist, int amount = 1, int StorageCapacity = int.MaxValue, bool takefirstitem = false, IEnumerable<ItemBase> whiteblacklist = null, bool iswhitelist = true)
+        {
+            int listcount;
+            int freespace;
+            List<ItemBase> workingsource = sourcelist.ToList();
+            List<ItemBase> workingtarget = targetlist.ToList();
+            List<ItemBase> filter = new List<ItemBase>();
+            if (whiteblacklist != null)
+                filter = whiteblacklist.ToList();
+            int filtercount = filter.Count;
+            bool matchfound = false;
+
+            if (amount <= 0)
+            {
+                return;
+            }
+            for (int index = 0; index < workingsource.Count; index++)
+            {
+                listcount = workingsource[index].GetAmount();
+                freespace = StorageCapacity - workingtarget.GetItemCount();
+                ItemBase i = workingsource[index];
+
+                if (filtercount != 0)
+                {
+                    for (int index2 = 0; index2 < filtercount; index2++) 
+                    {
+                        ItemBase j = filter[index2];
+                        if (j == null)
+                        {
+                            Debug.LogError("MoveItems attempted to filter by null item");
+                            return;
+                        }
+                        matchfound = (i.Compare(j));
+                        if (matchfound)
+                            break;
+                    }
+                    //XOR to skip the continue otherwise white/black list violation so go to next item
+                    if (matchfound ^ iswhitelist)
+                        continue;
+                }
+
+                if (i.IsStack())
+                {
+                    if (listcount > amount)
+                    {
+                        if (amount > freespace)
+                        {
+                            AddListItem(NewInstance(i).SetAmount(freespace), ref workingtarget, false);
+                            i.DecrementStack(freespace);
+                            sourcelist = workingsource;
+                            targetlist = workingtarget;
+                            return;
+                        }
+                        else
+                        {
+                            AddListItem(NewInstance(i).SetAmount(amount), ref workingtarget, false);
+                            i.DecrementStack(amount);
+                            sourcelist = workingsource;
+                            targetlist = workingtarget;
+                            return;
+                        }
+                    }
+                    else if (listcount == amount)
+                    {
+                        if (amount > freespace)
+                        {
+                            AddListItem(NewInstance(i).SetAmount(freespace), ref workingtarget, false);
+                            workingsource.Remove(i);
+                            sourcelist = workingsource;
+                            targetlist = workingtarget;
+                            return;
+                        }
+                        else
+                        {
+                            AddListItem(NewInstance(i).SetAmount(amount), ref workingtarget, false);
+                            workingsource.Remove(i);
+                            sourcelist = workingsource;
+                            targetlist = workingtarget;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (listcount > freespace)
+                        {
+                            AddListItem(NewInstance(i).SetAmount(freespace), ref workingtarget, false);
+                            workingsource.Remove(i);
+                            amount -= listcount;
+                        }
+                        else
+                        {
+                            AddListItem(NewInstance(i).SetAmount(listcount), ref workingtarget, false);
+                            workingsource.Remove(i);
+                            amount -= listcount;
+                        }
+                    }
+                }
+                else
+                {
+                    if (freespace > 0)
+                    {
+                        AddListItem(NewInstance(i), ref workingtarget, false);
+                        workingsource.Remove(i);
+                        amount--;
+                    }
+                    else
+                    {
+                        sourcelist = workingsource;
+                        targetlist = workingtarget;
+                        return;
+                    }
+                }
+                if (takefirstitem)
+                    break;
+            }
+            sourcelist = workingsource;
+            targetlist = workingtarget;
+        }
+
+        /// <summary>
+        ///     Moves specified amount of any items from one list to another obeying target storage capacity.
+        /// </summary>
+        /// <param name="sourceitem">Source item to move</param>
+        /// <param name="targetlist">Target list of items</param>
+        /// <param name="amount">Quantity of items to move (for stacks)</param>
+        /// <param name="StorageCapacity">Storage capacity of target item list</param>
+        /// <param name="takefirstitem">Moves only the first item found</param>
+        /// <param name="whiteblacklist">A list of items to server as a whitelist or blacklist for transferring</param>
+        /// <param name="iswhitelist">True if whitelist otherwise treat as a blacklist</param>
+        public static void MoveItems(this ItemBase sourceitem, ref List<ItemBase> targetlist, int amount = 1, int StorageCapacity = int.MaxValue, bool takefirstitem = false, IEnumerable<ItemBase> whiteblacklist = null, bool iswhitelist = true)
+        {
+            if (sourceitem == null)
+            {
+                Debug.LogError("MoveItems attempted to move a null item!");
+                return;
+            }
+            List<ItemBase> sourcelist = new List<ItemBase>();
+            sourcelist.Add(sourceitem);
+            MoveItems(ref sourcelist, ref targetlist, amount, StorageCapacity, takefirstitem, whiteblacklist, iswhitelist);
+        }
+    }
 }
