@@ -183,14 +183,15 @@ namespace FortressCraft.Community.Utilities
 		/// </summary>
 		/// <param name="item">The Item Stack</param>
 		/// <param name="amount">The amount of Items</param>
-		public static void SetAmount(this ItemBase item, Int32 amount)
+		public static ItemBase SetAmount(this ItemBase item, Int32 amount)
 		{
 			if (!item.IsStack())
-				return;
+				return item;
 			if (item.mType == ItemType.ItemCubeStack)
 				item.As<ItemCubeStack>().mnAmount = amount;
 			if (item.mType == ItemType.ItemStack)
 				item.As<ItemStack>().mnAmount = amount;
+            return item;
 		}
 
 		/// <summary>
