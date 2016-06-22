@@ -97,9 +97,9 @@ namespace FortressCraft.Community.Utilities
             int listlength = workingtarget.Count;
             for (int index = 0; index <= listlength; index++)
             {
-                if (index != listlength)
+                if (index != listlength && item.IsStack())
                 {
-                    if (workingtarget[index].IsStackAndSame(item))
+                    if (workingtarget[index].Compare(item))
                     {
                         workingtarget[index].IncrementStack(itemcount);
                         item = null;
