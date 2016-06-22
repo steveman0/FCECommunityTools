@@ -16,6 +16,11 @@ namespace FortressCraft.Community.Utilities
         public MachineEntity Machine;
 
         /// <summary>
+        ///     For associating the mob owner of the inventory
+        /// </summary>
+        public MobEntity Mob;
+
+        /// <summary>
         ///     The total item capacity of the storage
         /// </summary>
         public int StorageCapacity;
@@ -33,6 +38,18 @@ namespace FortressCraft.Community.Utilities
         public MachineInventory(MachineEntity machineentity, int storagecapacity)
         {
             this.Machine = machineentity;
+            this.StorageCapacity = storagecapacity;
+            this.Inventory = new List<ItemBase>();
+        }
+
+        /// <summary>
+        ///     Generic machine inventory class with list inventory support
+        /// </summary>
+        /// <param name="mobentity">For associating the owner mob</param>
+        /// <param name="storagecapacity">The storage capacity of the inventory</param>
+        public MachineInventory(MobEntity mobentity, int storagecapacity)
+        {
+            this.Mob = mobentity;
             this.StorageCapacity = storagecapacity;
             this.Inventory = new List<ItemBase>();
         }
@@ -301,6 +318,11 @@ namespace FortressCraft.Community.Utilities
         /// </summary>
         public void DropOnDelete()
         {
+            if (this.Machine == null)
+            {
+                Debug.LogWarning("Tried to drop machine inventory when not associated with a machine!");
+                return;
+            }
             if (!WorldScript.mbIsServer)
                 return;
             System.Random random = new System.Random();
@@ -310,6 +332,30 @@ namespace FortressCraft.Community.Utilities
                 {
                     Vector3 velocity = new Vector3((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f);
                     ItemManager.instance.DropItem(this.Inventory[index], this.Machine.mnX, this.Machine.mnY, this.Machine.mnZ, velocity);
+                }
+            }
+            this.Inventory = null;
+        }
+
+        /// <summary>
+        ///     Item drop code for emptying the inventory on the ground on mob delete
+        /// </summary>
+        public void DropOnMobDelete()
+        {
+            if (this.Mob == null)
+            {
+                Debug.LogWarning("Tried to drop mob inventory when not associated with a mob!");
+                return;
+            }
+            if (!WorldScript.mbIsServer)
+                return;
+            System.Random random = new System.Random();
+            for (int index = 0; index < this.Inventory.Count; ++index)
+            {
+                if (this.Inventory[index] != null)
+                {
+                    Vector3 velocity = new Vector3((float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f, (float)random.NextDouble() - 0.5f);
+                    ItemManager.instance.DropItem(this.Inventory[index], this.Mob.mnX, this.Mob.mnY, this.Mob.mnZ, velocity);
                 }
             }
             this.Inventory = null;
