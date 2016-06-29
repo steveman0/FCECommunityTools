@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace FortressCraft.Community.Utilities
 {
+    /// <summary>
+    ///     Simple cross-mod compatible UI support.  Original code by BinaryAlgorithm, updated by steveman0
+    /// </summary>
     public class UIUtil
     {
         /// <summary>
