@@ -33,7 +33,17 @@ namespace FortressCraft.Community.Utilities
 		/// <returns>True if ItemID and Type of both Items match, otherwise false</returns>
 		public static bool Compare(this ItemBase original, ItemBase comparer)
 		{
-			return original.mnItemID == comparer.mnItemID && original.mType == comparer.mType;
+            if (original == null || comparer == null)
+                return false;
+            if (original.mType == comparer.mType)
+            {
+                if (original.mType == ItemType.ItemCubeStack && comparer.mType == ItemType.ItemCubeStack)
+                    return (original as ItemCubeStack).CompareCubes(comparer as ItemCubeStack);
+                else
+                    return original.mnItemID == comparer.mnItemID && original.mType == comparer.mType;
+            }
+            else
+                return false;
 		}
 
 		/// <summary>
@@ -43,10 +53,10 @@ namespace FortressCraft.Community.Utilities
 		/// <param name="original">Original Item</param>
 		/// <param name="comparer">Item to Compare Against</param>
 		/// <returns>True if ItemID, Type, CubeType, CubeValue of both Items match, otherwise false</returns>
-		public static bool Compare(this ItemCubeStack original, ItemCubeStack comparer)
+		public static bool CompareCubes(this ItemCubeStack original, ItemCubeStack comparer)
 		{
 			// We'll ignore the original stacks for now. May revisit in the future
-			return original != null && comparer != null && original.Compare(comparer.As<ItemBase>()) &&
+			return original != null && comparer != null &&
 				   original.mCubeType == comparer.mCubeType && original.mCubeValue == comparer.mCubeValue;
 			// && original.mnAmount == comparer.mnAmount;
 		}
@@ -183,14 +193,15 @@ namespace FortressCraft.Community.Utilities
 		/// </summary>
 		/// <param name="item">The Item Stack</param>
 		/// <param name="amount">The amount of Items</param>
-		public static void SetAmount(this ItemBase item, Int32 amount)
+		public static ItemBase SetAmount(this ItemBase item, Int32 amount)
 		{
 			if (!item.IsStack())
-				return;
+				return item;
 			if (item.mType == ItemType.ItemCubeStack)
 				item.As<ItemCubeStack>().mnAmount = amount;
 			if (item.mType == ItemType.ItemStack)
 				item.As<ItemStack>().mnAmount = amount;
+            return item;
 		}
 
 		/// <summary>
