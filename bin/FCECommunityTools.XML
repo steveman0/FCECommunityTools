@@ -1,0 +1,639 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FCECommunityTools</name>
+    </assembly>
+    <members>
+        <member name="T:FortressCraft.Community.CommunityItemInterface">
+            <summary>
+            	A community interface to allow cross-mod communication for item storage
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.HasItems">
+            <summary>
+            	Checks to see if a Storage Medium has any items
+            </summary>
+            <returns>True if the storage medium has any item, false otherwise</returns>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.HasItem(ItemBase)">
+             <summary>
+            		Checks to see if a Storage Medium has the specified item
+             
+            		Checks for Ore/Item/Cube
+             </summary>
+             <param name="item">The Item to Check For</param>
+             <returns>True if the storage medium has the specified item, false otherwise</returns>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.HasItems(ItemBase,System.Int32@)">
+             <summary>
+            		Checks to see if a Storage Medium has the specified item
+             
+            		Checks for Ore/Item/Cube
+             </summary>
+             <param name="item">The Item to Check For</param>
+             <param name="amount">Stores the amount of the items available</param>
+             <returns>True if the storage medium has the specified item, false otherwise</returns>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.HasFreeSpace(System.UInt32)">
+            <summary>
+            	Checks to see if a Storage Medium has <c>amount</c> capcity free
+            </summary>
+            <param name="amount">The amount of capcity to check for</param>
+            <returns>True if the storage medium has <c>amount</c> capacity free, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.GetFreeSpace">
+            <summary>
+            	Get the free capcity of the entity
+            </summary>
+            <returns>The free capcity of the entity</returns>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.GiveItem(ItemBase)">
+            <summary>
+            	Attempts to give the Item to a Storage Medium
+            </summary>
+            <param name="item">The Item to give to a Storage Medium</param>
+            <returns>True if the Storage Medium accepted the item, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.TakeItem(ItemBase)">
+            <summary>
+            	Attempts to take an Item from a Storage Medium
+            </summary>
+            <param name="item">The Item to Retrieve</param>
+            <returns>An ItemBase if the requested Item was found, otherwise null</returns>
+        </member>
+        <member name="M:FortressCraft.Community.CommunityItemInterface.TakeAnyItem">
+            <summary>
+                Attempts to take any item from a Storage Medium
+            </summary>
+            <returns>An ItemBase if there's something to return, or null if empty</returns>
+        </member>
+        <member name="T:FortressCraft.Community.Utilities.ItemBaseUtil">
+            <summary>
+            	Extension Methods and Helpers for the ItemBase Class
+            </summary>
+            <summary>
+            	Extension Methods and Helpers for the ItemBase Class
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.GetItemCount(System.Collections.Generic.IEnumerable{ItemBase})">
+            <summary>
+            	Gets the amount of items and cubes in any type of Enumerable ItemBase
+            </summary>
+            <param name="items">The list of items to get the total count from</param>
+            <returns>The amount of Items and Cubes</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.GetItemCount(System.Collections.Generic.IEnumerable{ItemBase},System.Int32)">
+            <summary>
+            	Gets the amount of items in any type of Enumerable ItemBase
+            </summary>
+            <param name="items">The list of items to get the total count from</param>
+            <param name="itemId">The unique id of the item to count</param>
+            <returns>The amount of Items</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.GetItemCount(System.Collections.Generic.IEnumerable{ItemBase},System.UInt16,System.UInt16)">
+            <summary>
+            	Gets the amount of cubes in any type of Enumerable ItemBase
+            </summary>
+            <param name="items"></param>
+            <param name="cubeId"></param>
+            <param name="cubeValue"></param>
+            <returns>The amount of Cubes</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.GetItemCount(System.Collections.Generic.IEnumerable{ItemBase},ItemBase)">
+            <summary>
+            	Gets the amount of cubes OR items from any Enumerable ItemBase, based off of an ItemBase
+            </summary>
+            <param name="items">The list of items to get the total count from</param>
+            <param name="restraints">The ItemBase which to restrain the Count to</param>
+            <returns>The amount of Cubes or Items</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.AddListItem(ItemBase,System.Collections.Generic.List{ItemBase}@,System.Boolean,System.Int32)">
+            <summary>
+                Adds an ItemBase to a list, consolidating stacks - obeys list storage capacity by returning excess items
+            </summary>
+            <param name="item">The item to add to the list</param>
+            <param name="targetlist">The list to transfer it to</param>
+            <param name="returnpartialstack">If true returns partial stack when insufficient stack size found</param>
+            <param name="storagecapacity">The list's storage capacity</param>
+            <returns>The remaining items that do not fit in the list</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.RemoveListItem(ItemBase,System.Collections.Generic.List{ItemBase}@,System.Boolean)">
+            <summary>
+                Deduct an item from an item list by example
+            </summary>
+            <param name="item">The example item to attempt to remove from the list</param>
+            <param name="sourcelist">The list to take the item from</param>
+            <param name="returnpartialstack">If true returns partial stack when insufficient stack size found</param>
+            <returns>The ItemBase object or null if unavailable</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.MoveItems(System.Collections.Generic.List{ItemBase}@,System.Collections.Generic.List{ItemBase}@,System.Int32,System.Int32,System.Boolean,System.Collections.Generic.IEnumerable{ItemBase},System.Boolean)">
+            <summary>
+                Moves specified amount of any items from one list to another obeying target storage capacity.
+            </summary>
+            <param name="sourcelist">Source list of items</param>
+            <param name="targetlist">Target list of items</param>
+            <param name="amount">Quantity of items to move</param>
+            <param name="StorageCapacity">Storage capacity of target item list</param>
+            <param name="takefirstitem">Moves only the first item found</param>
+            <param name="whiteblacklist">A list of items to server as a whitelist or blacklist for transferring</param>
+            <param name="iswhitelist">True if whitelist otherwise treat as a blacklist</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.MoveItems(ItemBase,System.Collections.Generic.List{ItemBase}@,System.Int32,System.Int32,System.Boolean,System.Collections.Generic.IEnumerable{ItemBase},System.Boolean)">
+            <summary>
+                Moves specified amount of any items from one list to another obeying target storage capacity.
+            </summary>
+            <param name="sourceitem">Source item to move</param>
+            <param name="targetlist">Target list of items</param>
+            <param name="amount">Quantity of items to move (for stacks)</param>
+            <param name="StorageCapacity">Storage capacity of target item list</param>
+            <param name="takefirstitem">Moves only the first item found</param>
+            <param name="whiteblacklist">A list of items to server as a whitelist or blacklist for transferring</param>
+            <param name="iswhitelist">True if whitelist otherwise treat as a blacklist</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.CompareDeep(ItemBase,ItemBase)">
+            <summary>
+                Compares all possible
+            </summary>
+            <param name="original">The original ItemBase</param>
+            <param name="comparer">The ItemBase to Compare Against</param>
+            <returns>True if all major properties match</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.Compare(ItemBase,ItemBase)">
+            <summary>
+                Compare the ItemID and Type values of ItemBase
+            </summary>
+            <param name="original">Original Item</param>
+            <param name="comparer">Item to Compare Against</param>
+            <returns>True if ItemID and Type of both Items match, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.CompareCubes(ItemCubeStack,ItemCubeStack)">
+            <summary>
+                Compares the ItemID, Type, CubeType, and CubeValue values of ItemCubeStack
+                Does not compare the Amounts
+            </summary>
+            <param name="original">Original Item</param>
+            <param name="comparer">Item to Compare Against</param>
+            <returns>True if ItemID, Type, CubeType, CubeValue of both Items match, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.Compare(ItemDurability,ItemDurability)">
+            <summary>
+                Compares the ItemID, Type, CurrentDurability, and MaxDurability values of ItemDurability
+            </summary>
+            <param name="original">Original Item</param>
+            <param name="comparer">Item to Compare Against</param>
+            <returns>True if ItemID, Type, CurrentDurability, and MaxDurability of both Items match, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.Compare(ItemStack,ItemStack)">
+            <summary>
+                Compares the ItemID and Type values of ItemStack
+            </summary>
+            <param name="original">Original Item</param>
+            <param name="comparer">Item to Compare Against</param>
+            <returns>True if ItemID and Type of both Items match, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.Compare(ItemSingle,ItemSingle)">
+            <summary>
+                Compares ItemID and Type values of ItemSingle
+            </summary>
+            <param name="original">Original Item</param>
+            <param name="comparer">Item to Compare Against</param>
+            <returns>True if ItemID and Type of both Items match, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.Compare(ItemCharge,ItemCharge)">
+            <summary>
+                Compares ItemID, Type, and ChargeLevel of ItemCharge
+            </summary>
+            <param name="original">Original Item</param>
+            <param name="comparer">Item to Compare Against</param>
+            <returns>True if ItemID, Type and ChargeLevel of both Items match, otherwise false</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.Compare(ItemLocation,ItemLocation)">
+            <summary>
+                Compares ItemID, Type, LocationX, LocationY, LocationZ, LookVectorX, LookVectorY amd LookVectoryZ of ItemLocation
+            </summary>
+            <param name="original">Original Item</param>
+            <param name="comparer">Item to Compare Against</param>
+            <returns>
+                True if ItemID, Type, LocationX, LocationY, LocationZ, LookVectorX, LookVectorY amd LookVectoryZ of both Items
+                match, otherwise false
+            </returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.IsStack(ItemBase)">
+            <summary>
+                Is the Item original Stack Type
+            </summary>
+            <param name="item">The Item</param>
+            <returns>True if Item is original Stack, otherwise False</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.IsStackAndSame(ItemBase,ItemBase)">
+            <summary>
+                Compares two Items to check if they are both stacks and identical
+            </summary>
+            <param name="item">The original Item</param>
+            <param name="comparer">The item to compare against</param>
+            <returns>True if both Items are stacks and the same</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.IncrementStack(ItemBase,System.Int32)">
+            <summary>
+                Increases the Stack Size by the specified amount
+            </summary>
+            <param name="item">The Item Stack</param>
+            <param name="amount">The amount to increment by (Default: 1)</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.DecrementStack(ItemBase,System.Int32)">
+            <summary>
+                Decrement the Stack Size by the specified amount
+            </summary>
+            <param name="item">The Item Stack</param>
+            <param name="amount">The amount to increment by (Default: 1)</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.SetAmount(ItemBase,System.Int32)">
+            <summary>
+                Set the amount of items in original Item Stack
+            </summary>
+            <param name="item">The Item Stack</param>
+            <param name="amount">The amount of Items</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.NewInstance(ItemBase)">
+            <summary>
+                Creates original new instance of the ItemBase type
+            </summary>
+            <param name="item">The original to create original new instance of</param>
+            <returns>The new original, or null if unknown type</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.GetAmount(ItemBase)">
+            <summary>
+                Gets the amount of items in an ItemBase, while being Stack friendly
+            </summary>
+            <param name="item">The original</param>
+            <returns>The amount of items</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.As``1(ItemBase)">
+            <summary>
+            	Convert a ItemBase into a class that inherits ItemBase
+            </summary>
+            <typeparam name="TItemBase">Class that Inherits ItemBase</typeparam>
+            <param name="item">The entity to convert</param>
+            <returns>The entity as <see cref="!:TItemBase"/></returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.ItemBaseUtil.FloatTolerance(System.Single,System.Single,System.Single)">
+            <summary>
+                A Float Equals method with tolerance.
+                Based off of: https://msdn.microsoft.com/en-us/library/ya2zha7s.aspx
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.CommunityUtil.CheckSurrounding``1(MachineEntity,System.Boolean@)">
+            <summary>
+                Checks the N/E/S/W/Up/Down directions of the Center block for any SegmentEntitys of T;
+                Will report whether there was a failure because a segment wasn't loaded.
+            </summary>
+            <typeparam name="T">The SegmentEntity class to search for.</typeparam>
+            <param name="center">The MachineEntity to Search Around</param>
+            <param name="encounteredNullSegments">Whether or not a Null Segment was Encountered</param>
+            <returns></returns>
+        </member>
+        <member name="T:FortressCraft.Community.Utilities.GameObjectUtil">
+            <summary>
+            	Extension Methods and Helpers for the GameObject class
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.GameObjectUtil.#cctor">
+            <summary>
+            	Stores all of the GameObjects from the Games Resources into a cached object
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.GameObjectUtil.GetObjectFromList(System.String)">
+            <summary>
+            	Gets a GameObject from the Resources
+            	Originally created by binaryalgorithm &amp; steveman0
+            </summary>
+            <param name="name">The Name of the GameObject to retrieve</param>
+            <returns>The named GameObject, or null</returns>
+        </member>
+        <member name="T:FortressCraft.Community.Utilities.MachineInventory">
+            <summary>
+                Generic machine inventory class with list inventory support
+            </summary>
+            <remarks>Origianl code by steveman0</remarks>
+        </member>
+        <member name="F:FortressCraft.Community.Utilities.MachineInventory.Machine">
+            <summary>
+                For associating the machine owner of the inventory
+            </summary>
+        </member>
+        <member name="F:FortressCraft.Community.Utilities.MachineInventory.Mob">
+            <summary>
+                For associating the mob owner of the inventory
+            </summary>
+        </member>
+        <member name="F:FortressCraft.Community.Utilities.MachineInventory.StorageCapacity">
+            <summary>
+                The total item capacity of the storage
+            </summary>
+        </member>
+        <member name="F:FortressCraft.Community.Utilities.MachineInventory.Inventory">
+            <summary>
+                The list of items in the inventory
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.#ctor(MachineEntity,System.Int32)">
+            <summary>
+                Generic machine inventory class with list inventory support
+            </summary>
+            <param name="machineentity">For associating the owner machine</param>
+            <param name="storagecapacity">The storage capacity of the inventory</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.#ctor(MobEntity,System.Int32)">
+            <summary>
+                Generic machine inventory class with list inventory support
+            </summary>
+            <param name="mobentity">For associating the owner mob</param>
+            <param name="storagecapacity">The storage capacity of the inventory</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.AddItem(ItemBase,System.Int32)">
+            <summary>
+                Add a single item type to the inventory
+            </summary>
+            <param name="item">The item to add</param>
+            <param name="amount">Amount of items added if given a stack</param>
+            <returns>Returns the remainder that doesn't fit or null if successful</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.AddItem(System.Collections.Generic.List{ItemBase}@,System.Int32)">
+            <summary>
+                Add items from a source inventory or item list
+            </summary>
+            <param name="items">The source inventory or list of items</param>
+            <param name="amount">The number of items to transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.AddWhiteList(System.Collections.Generic.List{ItemBase}@,System.Collections.Generic.IEnumerable{ItemBase},System.Int32)">
+            <summary>
+                Transfers items to machine inventory if they are on the provided whitelist
+            </summary>
+            <param name="items">Source inventory or list of items</param>
+            <param name="whitelist">List of items types allowed in the transfer</param>
+            <param name="amount">Number of items to add</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.AddWhiteList(System.Collections.Generic.List{ItemBase}@,ItemBase,System.Int32)">
+            <summary>
+                Transfers items to machine inventory if they are on the provided whitelist
+            </summary>
+            <param name="items">Source inventory or list of items</param>
+            <param name="whitelist">Item type allowed in the transfer</param>
+            <param name="amount">Number of items to add</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.AddBlackList(System.Collections.Generic.List{ItemBase}@,System.Collections.Generic.IEnumerable{ItemBase},System.Int32)">
+            <summary>
+                Transfers items to machine inventory if they are not on the provided blacklist
+            </summary>
+            <param name="items">Source inventory or list of items</param>
+            <param name="blacklist">List of items forbidden from transfer</param>
+            <param name="amount">Number of items to add</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.AddBlackList(System.Collections.Generic.List{ItemBase}@,ItemBase,System.Int32)">
+            <summary>
+                Transfers items to machine inventory if they are not on the provided blacklist
+            </summary>
+            <param name="items">Source inventory or list of items</param>
+            <param name="blacklist">Item forbidden from transfer</param>
+            <param name="amount">Number of items to add</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.Fill(System.Collections.Generic.List{ItemBase}@)">
+            <summary>
+                Fills the inventory to capacity with source items
+            </summary>
+            <param name="items">Source items to fill the inventory</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.FillWhiteList(System.Collections.Generic.List{ItemBase}@,System.Collections.Generic.IEnumerable{ItemBase})">
+            <summary>
+                Fills the inventory to capacity with source items
+            </summary>
+            <param name="items">Source items to fill the inventory</param>
+            <param name="whitelist">Item type allowed in the transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.FillWhiteList(System.Collections.Generic.List{ItemBase}@,ItemBase)">
+            <summary>
+                Fills the inventory to capacity with source items
+            </summary>
+            <param name="items">Source items to fill the inventory</param>
+            <param name="whitelist">Item type allowed in the transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.FillBlackList(System.Collections.Generic.List{ItemBase}@,System.Collections.Generic.IEnumerable{ItemBase})">
+            <summary>
+                Fills the inventory to capacity with source items
+            </summary>
+            <param name="items">Source items to fill the inventory</param>
+            <param name="blacklist">Item forbidden from transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.FillBlackList(System.Collections.Generic.List{ItemBase}@,ItemBase)">
+            <summary>
+                Fills the inventory to capacity with source items
+            </summary>
+            <param name="items">Source items to fill the inventory</param>
+            <param name="blacklist">Item forbidden from transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.Empty(System.Collections.Generic.List{ItemBase}@,System.Int32)">
+            <summary>
+                Empty the inventory of items
+            </summary>
+            <param name="items">Target inventory or list</param>
+            <param name="amount">Maximum number of items to take</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.RemoveItem(ItemBase)">
+            <summary>
+                Return item from inventory by example (obeys stack size)
+            </summary>
+            <param name="item">Example item to find in inventory</param>
+            <returns>Returns the item or null if unavailable or insufficient stack size</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.RemovePartialStack(ItemBase)">
+            <summary>
+                Return item from inventory by example including partial item stack
+            </summary>
+            <param name="item">Example item to find in inventory</param>
+            <returns>Returns the item or partial stack (null if item not found)</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.RemoveAnySingle(System.Int32)">
+            <summary>
+                Remove any single item type from the inventory
+            </summary>
+            <param name="amount">Amount to remove (for stacks)</param>
+            <returns>The ItemBase removed from inventory</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.RemoveWhiteList(System.Collections.Generic.List{ItemBase}@,System.Collections.Generic.IEnumerable{ItemBase},System.Int32,System.Int32)">
+            <summary>
+                Remove items from inventory if items are on the whitelist
+            </summary>
+            <param name="items">The target inventory or list to store the items</param>
+            <param name="whitelist">The list of items allowed to transfer</param>
+            <param name="storagecapacity">Storage capacity of target inventory</param>
+            <param name="amount">Amount of items to move in this transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.RemoveWhiteList(System.Collections.Generic.List{ItemBase}@,ItemBase,System.Int32,System.Int32)">
+            <summary>
+                Remove items from inventory if items are on the whitelist
+            </summary>
+            <param name="items">The target inventory or list to store the items</param>
+            <param name="whitelist">Item allowed to transfer</param>
+            <param name="storagecapacity">Storage capacity of target inventory</param>
+            <param name="amount">Amount of items to move in this transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.RemoveBlackList(System.Collections.Generic.List{ItemBase}@,System.Collections.Generic.IEnumerable{ItemBase},System.Int32,System.Int32)">
+            <summary>
+                Remove items from inventory if items are not on the blacklist
+            </summary>
+            <param name="items">The target inventory or list to store the items</param>
+            <param name="blacklist">The list of items forbidden from transfer</param>
+            <param name="storagecapacity">Storage capacity of target inventory</param>
+            <param name="amount">Amount of items to move in this transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.RemoveBlackList(System.Collections.Generic.List{ItemBase}@,ItemBase,System.Int32,System.Int32)">
+            <summary>
+                Remove items from inventory if items are not on the blacklist
+            </summary>
+            <param name="items">The target inventory or list to store the items</param>
+            <param name="blacklist">Item forbidden from transfer</param>
+            <param name="storagecapacity">Storage capacity of target inventory</param>
+            <param name="amount">Amount of items to move in this transfer</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.SpareCapacity">
+            <summary>
+                Returns the spare capacity of the inventory
+            </summary>
+            <returns>The spare capacity of the inventory</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.ItemCount">
+            <summary>
+                Returns the current number of items in the inventory
+            </summary>
+            <returns>Current number of items in inventory</returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.HasSpareCapcity">
+            <summary>
+                Helper logic for checking if the inventory has space
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.IsEmpty">
+            <summary>
+                Helper logic for checking if the inventory is empty
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.IsFull">
+            <summary>
+                Helper logic for checking if the inventory is full
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.DropOnDelete">
+            <summary>
+                Item drop code for emptying the inventory on the ground on machine delete
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.DropOnMobDelete">
+            <summary>
+                Item drop code for emptying the inventory on the ground on mob delete
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.WriteInventory(System.IO.BinaryWriter)">
+            <summary>
+                Generic serialization function for writing the inventory to disk
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.MachineInventory.ReadInventory(System.IO.BinaryReader)">
+            <summary>
+                Generic serialization function for reading the inventory from disk
+            </summary>
+            <param name="reader"></param>
+        </member>
+        <member name="T:FortressCraft.Community.Utilities.SegmentEntityUtil">
+            <summary>
+            	Extension Methods and Helpers for the SegmentEntity class
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.SegmentEntityUtil.As``1(SegmentEntity)">
+            <summary>
+            	Convert a SegmentEntity into a class that inherit SegmentEntity
+            </summary>
+            <typeparam name="TSegmentEntity">Class that Inherits SegmentEntity</typeparam>
+            <param name="entity">The entity to convert</param>
+            <returns>The entity as TSegmentEntity</returns>
+        </member>
+        <member name="T:FortressCraft.Community.Utilities.UIUtil">
+            <summary>
+                Simple cross-mod compatible UI support.  Original code by BinaryAlgorithm, updated by steveman0
+            </summary>
+        </member>
+        <member name="F:FortressCraft.Community.Utilities.UIUtil.UIdelay">
+            <summary>
+                Timer to delay dissociation of UI panel to overcome race condition
+            </summary>
+        </member>
+        <member name="F:FortressCraft.Community.Utilities.UIUtil.UILock">
+            <summary>
+                Lock to prevent running the dissociation when it isn't needed
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.UIUtil.HandleThisMachineWindow(SegmentEntity,BaseMachineWindow)">
+            <summary>
+                Call this in GetPopupText to handle your UI Window
+            </summary>
+            <param name="theMachine">Pass the current machine</param>
+            <param name="theWindow">The mod window inherited from BaseMachineWindow</param>
+            <returns></returns>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.UIUtil.Hide(GenericMachinePanelScript)">
+            <summary>
+                Internal sub function for hiding the panel
+            </summary>
+            <param name="panel">The working panel</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.UIUtil.DisconnectUI">
+            <summary>
+                Insert in machine UnityUpdate to disconnect the UI when finished.
+            </summary>
+        </member>
+        <member name="T:FortressCraft.Community.ItemInterop">
+            <summary>
+            	A class that provides Interopability between Storage and Machines for Pre-StorageInterface mods
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.ItemInterop.HasItems(SegmentEntity)">
+            <summary>
+            	Checks to see if the <see cref="T:SegmentEntity">entity</see> has any items
+            </summary>
+            <param name="entity">A <see cref="T:SegmentEntity">SegmentEntity</see></param>
+            <returns>True if the <see cref="T:SegmentEntity">entity</see> has any items, false otherwise</returns>
+        </member>
+        <member name="M:FortressCraft.Community.ItemInterop.GiveItem(SegmentEntity,ItemBase)">
+            <summary>
+            	
+            </summary>
+            <param name="entity"></param>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FortressCraft.Community.ItemInterop.TakeItem(SegmentEntity,ItemBase)">
+            <summary>
+            	Will attempt to return the requested <see cref="T:ItemBase">item</see> from the <see cref="T:SegmentEntity">entity</see>
+            </summary>
+            <param name="entity">The <see cref="T:SegmentEntity">entity</see> to try and get the <see cref="T:ItemBase">item</see> from</param>
+            <param name="item">The <see cref="T:ItemBase">ItemBase</see> with details of what to retrrieve</param>
+            <returns></returns>
+        </member>
+        <member name="M:FortressCraft.Community.ItemInterop.TakeAnyItem(SegmentEntity)">
+            <summary>
+            	Will return any <see cref="T:ItemBase">item</see> from the <see cref="T:SegmentEntity">entity</see>
+            </summary>
+            <param name="entity">The <see cref="T:SegmentEntity">entity</see> to get a <see cref="T:ItemBase">item</see> from</param>
+            <returns>A <see cref="T:ItemBase">item</see>, or <c>NULL</c></returns>
+        </member>
+        <member name="T:FortressCraft.Community.ItemInterops.ItemInteropInterface">
+            <summary>
+            	This interface needs to mimic <see cref="T:FortressCraft.Community.CommunityItemInterface">CommunityItemInterface</see>'s methods,
+            	but take a <see cref="T:SegmentEntity">SegmentEntity</see> as the first param.
+            </summary>
+        </member>
+    </members>
+</doc>
