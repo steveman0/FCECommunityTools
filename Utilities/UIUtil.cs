@@ -122,7 +122,7 @@ namespace FortressCraft.Community.Utilities
         /// </summary>
         public static void DisconnectUI()
         {
-            if (UIdelay > 30 && UILock)
+            if (UIdelay > 50 && UILock)
             {
                 GenericMachinePanelScript panel = GenericMachinePanelScript.instance;
                 panel.gameObject.SetActive(false);
@@ -137,6 +137,23 @@ namespace FortressCraft.Community.Utilities
                 UILock = false;
             }
             UIdelay++;
+        }
+
+        /// <summary>
+        ///     An emergency escape function when looking at the wrong machine
+        /// </summary>
+        public static void EscapeUI()
+        {
+            GenericMachinePanelScript panel = GenericMachinePanelScript.instance;
+            panel.gameObject.SetActive(false);
+            panel.Background_Panel.SetActive(false);
+            panel.currentWindow = null;
+            panel.targetEntity = null;
+            GenericMachineManager manager2 = typeof(GenericMachinePanelScript).GetField("manager", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GenericMachinePanelScript.instance) as GenericMachineManager;
+            manager2.windows.Remove(eSegmentEntity.Mod);
+            UIManager.RemoveUIRules("Machine");
+            DragAndDropManager.instance.CancelDrag();
+            DragAndDropManager.instance.DisableDragBackground();
         }
     }
 }
