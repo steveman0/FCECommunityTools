@@ -594,6 +594,11 @@
                 Insert in machine UnityUpdate to disconnect the UI when finished.
             </summary>
         </member>
+        <member name="M:FortressCraft.Community.Utilities.UIUtil.EscapeUI">
+            <summary>
+                An emergency escape function when looking at the wrong machine
+            </summary>
+        </member>
         <member name="T:FortressCraft.Community.ItemInterop">
             <summary>
             	A class that provides Interopability between Storage and Machines for Pre-StorageInterface mods
