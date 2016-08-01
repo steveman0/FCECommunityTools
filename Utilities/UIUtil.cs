@@ -19,6 +19,11 @@ namespace FortressCraft.Community.Utilities
         public static bool UILock;
 
         /// <summary>
+        ///     Associates the machine so that it, and only it, can handle releasing the UI
+        /// </summary>
+        public static SegmentEntity TargetMachine;
+
+        /// <summary>
         ///     Call this in GetPopupText to handle your UI Window
         /// </summary>
         /// <param name="theMachine">Pass the current machine</param>
@@ -34,7 +39,10 @@ namespace FortressCraft.Community.Utilities
 
                 // this will replace with the current machine's window, which is OK as long as each Mod uses this technique
                 manager.windows[eSegmentEntity.Mod] = theWindow;
+                UIUtil.TargetMachine = theMachine;
                 theWindow.manager = manager;
+                UIUtil.UIdelay = 0;
+                UIUtil.UILock = true;
             }
             catch (Exception ex)
             {
@@ -120,27 +128,35 @@ namespace FortressCraft.Community.Utilities
         /// <summary>
         ///     Insert in machine UnityUpdate to disconnect the UI when finished.
         /// </summary>
-        public static void DisconnectUI()
+        public static void DisconnectUI(SegmentEntity theCaller)
         {
-            if (UIdelay > 50 && UILock)
+            if (UIdelay > 5 && UILock && UIUtil.TargetMachine != null && UIUtil.TargetMachine == theCaller)
             {
+                Debug.LogWarning("Disconnecting UI");
                 GenericMachinePanelScript panel = GenericMachinePanelScript.instance;
                 panel.gameObject.SetActive(false);
                 panel.Background_Panel.SetActive(false);
                 panel.currentWindow = null;
                 panel.targetEntity = null;
-                GenericMachineManager manager2 = typeof(GenericMachinePanelScript).GetField("manager", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GenericMachinePanelScript.instance) as GenericMachineManager;
-                manager2.windows.Remove(eSegmentEntity.Mod);
                 UIManager.RemoveUIRules("Machine");
                 DragAndDropManager.instance.CancelDrag();
                 DragAndDropManager.instance.DisableDragBackground();
+                GenericMachineManager manager2 = typeof(GenericMachinePanelScript).GetField("manager", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GenericMachinePanelScript.instance) as GenericMachineManager;
+                manager2.windows.Remove(eSegmentEntity.Mod);
+                if (manager2.windows.ContainsKey(eSegmentEntity.Mod))
+                {
+                    Debug.LogWarning("DisconnectUI was not able to remove the window entry!");
+                    return;
+                }
+                UIUtil.TargetMachine = null;
                 UILock = false;
             }
-            UIdelay++;
+            else if (UIUtil.TargetMachine != null && UIUtil.TargetMachine == theCaller)
+                UIdelay++;
         }
 
         /// <summary>
-        ///     An emergency escape function when looking at the wrong machine
+        ///     An emergency escape function when looking at the wrong machine (no longer necessary!)
         /// </summary>
         public static void EscapeUI()
         {
