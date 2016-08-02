@@ -367,6 +367,11 @@ namespace FortressCraft.Community.Utilities
         /// <param name="writer"></param>
         public void WriteInventory(BinaryWriter writer)
         {
+            if (this.Inventory == null)
+            {
+                Debug.LogWarning("Trying to write Machine Inventory but inventory is null?");
+                return;
+            }
             int listcount = this.Inventory.Count;
             int version = 0;
 
@@ -386,6 +391,7 @@ namespace FortressCraft.Community.Utilities
         {
             int listcount;
             int version = reader.ReadInt32();
+            this.Inventory = new List<ItemBase>();
 
             switch (version)
             {
