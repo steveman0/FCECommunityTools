@@ -132,7 +132,6 @@ namespace FortressCraft.Community.Utilities
         {
             if (UIdelay > 5 && UILock && UIUtil.TargetMachine != null && UIUtil.TargetMachine == theCaller)
             {
-                Debug.LogWarning("Disconnecting UI");
                 GenericMachinePanelScript panel = GenericMachinePanelScript.instance;
                 panel.gameObject.SetActive(false);
                 panel.Background_Panel.SetActive(false);
