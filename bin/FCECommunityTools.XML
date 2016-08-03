@@ -575,6 +575,11 @@
                 Lock to prevent running the dissociation when it isn't needed
             </summary>
         </member>
+        <member name="F:FortressCraft.Community.Utilities.UIUtil.TargetMachine">
+            <summary>
+                Associates the machine so that it, and only it, can handle releasing the UI
+            </summary>
+        </member>
         <member name="M:FortressCraft.Community.Utilities.UIUtil.HandleThisMachineWindow(SegmentEntity,BaseMachineWindow)">
             <summary>
                 Call this in GetPopupText to handle your UI Window
@@ -589,14 +594,14 @@
             </summary>
             <param name="panel">The working panel</param>
         </member>
-        <member name="M:FortressCraft.Community.Utilities.UIUtil.DisconnectUI">
+        <member name="M:FortressCraft.Community.Utilities.UIUtil.DisconnectUI(SegmentEntity)">
             <summary>
                 Insert in machine UnityUpdate to disconnect the UI when finished.
             </summary>
         </member>
         <member name="M:FortressCraft.Community.Utilities.UIUtil.EscapeUI">
             <summary>
-                An emergency escape function when looking at the wrong machine
+                An emergency escape function when looking at the wrong machine (no longer necessary!)
             </summary>
         </member>
         <member name="T:FortressCraft.Community.ItemInterop">
