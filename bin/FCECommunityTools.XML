@@ -580,6 +580,16 @@
                 Associates the machine so that it, and only it, can handle releasing the UI
             </summary>
         </member>
+        <member name="F:FortressCraft.Community.Utilities.UIUtil.StartPos">
+            <summary>
+                Vector for recording default window position for scaled UI
+            </summary>
+        </member>
+        <member name="F:FortressCraft.Community.Utilities.UIUtil.firstopen">
+            <summary>
+                Used to prevent rescaling the UI after it's already been done
+            </summary>
+        </member>
         <member name="M:FortressCraft.Community.Utilities.UIUtil.HandleThisMachineWindow(SegmentEntity,BaseMachineWindow)">
             <summary>
                 Call this in GetPopupText to handle your UI Window
@@ -602,6 +612,18 @@
         <member name="M:FortressCraft.Community.Utilities.UIUtil.EscapeUI">
             <summary>
                 An emergency escape function when looking at the wrong machine (no longer necessary!)
+            </summary>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.UIUtil.ScaleUIWindow(System.Single,System.Single)">
+            <summary>
+                Helper class for scaling UI window elements
+            </summary>
+            <param name="scalingfactorx">Multiplying factor for the window width</param>
+            <param name="xoffsetoverride">Allows manual overriding of the window content offset if required</param>
+        </member>
+        <member name="M:FortressCraft.Community.Utilities.UIUtil.RestoreUIScale">
+            <summary>
+                Used in UI window OnClose method to restore default window settings
             </summary>
         </member>
         <member name="T:FortressCraft.Community.ItemInterop">
