@@ -24,6 +24,16 @@ namespace FortressCraft.Community.Utilities
         public static SegmentEntity TargetMachine;
 
         /// <summary>
+        ///     Vector for recording default window position for scaled UI
+        /// </summary>
+        private Vector3 StartPos;
+
+        /// <summary>
+        ///     Used to prevent rescaling the UI after it's already been done
+        /// </summary>
+        private bool firstopen;
+
+        /// <summary>
         ///     Call this in GetPopupText to handle your UI Window
         /// </summary>
         /// <param name="theMachine">Pass the current machine</param>
@@ -169,6 +179,55 @@ namespace FortressCraft.Community.Utilities
             UIManager.RemoveUIRules("Machine");
             DragAndDropManager.instance.CancelDrag();
             DragAndDropManager.instance.DisableDragBackground();
+        }
+
+
+        /// <summary>
+        ///     Helper class for scaling UI window elements
+        /// </summary>
+        /// <param name="scalingfactorx">Multiplying factor for the window width</param>
+        /// <param name="xoffsetoverride">Allows manual overriding of the window content offset if required</param>
+        public void ScaleUIWindow(float scalingfactorx, float xoffsetoverride = 0)
+        {
+            if (!firstopen)
+            {
+                float xoffset = 0;
+                if (scalingfactorx > 0)
+                    xoffset = -140 * scalingfactorx;
+                if (xoffsetoverride != 0)
+                    xoffset = xoffsetoverride;
+                this.StartPos = GenericMachinePanelScript.instance.gameObject.transform.localPosition;
+                GenericMachinePanelScript.instance.gameObject.transform.localScale = new Vector3(scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.gameObject.transform.localPosition = this.StartPos + new Vector3(-xoffset, 0f, 0f);
+                GenericMachinePanelScript.instance.Background_Panel.transform.localScale = new Vector3(scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.Label_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.Icon_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.Content_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.Content_Icon_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.Scroll_Bar.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.Source_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
+                GenericMachinePanelScript.instance.Generic_Machine_Title_Label.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
+
+                firstopen = true;
+            }
+        }
+
+        /// <summary>
+        ///     Used in UI window OnClose method to restore default window settings
+        /// </summary>
+        public void RestoreUIScale()
+        {
+            GenericMachinePanelScript.instance.gameObject.transform.localPosition = this.StartPos;
+            GenericMachinePanelScript.instance.gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Background_Panel.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Label_Holder.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Icon_Holder.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Content_Holder.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Content_Icon_Holder.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Scroll_Bar.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Source_Holder.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            GenericMachinePanelScript.instance.Generic_Machine_Title_Label.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            this.firstopen = false;
         }
     }
 }
