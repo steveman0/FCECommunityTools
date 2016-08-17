@@ -26,12 +26,12 @@ namespace FortressCraft.Community.Utilities
         /// <summary>
         ///     Vector for recording default window position for scaled UI
         /// </summary>
-        private Vector3 StartPos;
+        private static Vector3 StartPos;
 
         /// <summary>
         ///     Used to prevent rescaling the UI after it's already been done
         /// </summary>
-        private bool firstopen;
+        private static bool firstopen;
 
         /// <summary>
         ///     Call this in GetPopupText to handle your UI Window
@@ -187,7 +187,7 @@ namespace FortressCraft.Community.Utilities
         /// </summary>
         /// <param name="scalingfactorx">Multiplying factor for the window width</param>
         /// <param name="xoffsetoverride">Allows manual overriding of the window content offset if required</param>
-        public void ScaleUIWindow(float scalingfactorx, float xoffsetoverride = 0)
+        public static void ScaleUIWindow(float scalingfactorx, float xoffsetoverride = 0)
         {
             if (!firstopen)
             {
@@ -196,9 +196,9 @@ namespace FortressCraft.Community.Utilities
                     xoffset = -140 * scalingfactorx;
                 if (xoffsetoverride != 0)
                     xoffset = xoffsetoverride;
-                this.StartPos = GenericMachinePanelScript.instance.gameObject.transform.localPosition;
+                StartPos = GenericMachinePanelScript.instance.gameObject.transform.localPosition;
                 GenericMachinePanelScript.instance.gameObject.transform.localScale = new Vector3(scalingfactorx, 1.0f, 1.0f);
-                GenericMachinePanelScript.instance.gameObject.transform.localPosition = this.StartPos + new Vector3(-xoffset, 0f, 0f);
+                GenericMachinePanelScript.instance.gameObject.transform.localPosition = StartPos + new Vector3(-xoffset, 0f, 0f);
                 GenericMachinePanelScript.instance.Background_Panel.transform.localScale = new Vector3(scalingfactorx, 1.0f, 1.0f);
                 GenericMachinePanelScript.instance.Label_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
                 GenericMachinePanelScript.instance.Icon_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
@@ -215,9 +215,9 @@ namespace FortressCraft.Community.Utilities
         /// <summary>
         ///     Used in UI window OnClose method to restore default window settings
         /// </summary>
-        public void RestoreUIScale()
+        public static void RestoreUIScale()
         {
-            GenericMachinePanelScript.instance.gameObject.transform.localPosition = this.StartPos;
+            GenericMachinePanelScript.instance.gameObject.transform.localPosition = StartPos;
             GenericMachinePanelScript.instance.gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             GenericMachinePanelScript.instance.Background_Panel.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             GenericMachinePanelScript.instance.Label_Holder.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -227,7 +227,7 @@ namespace FortressCraft.Community.Utilities
             GenericMachinePanelScript.instance.Scroll_Bar.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             GenericMachinePanelScript.instance.Source_Holder.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             GenericMachinePanelScript.instance.Generic_Machine_Title_Label.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            this.firstopen = false;
+            firstopen = false;
         }
     }
 }
