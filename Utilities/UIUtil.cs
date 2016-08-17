@@ -198,7 +198,7 @@ namespace FortressCraft.Community.Utilities
                     xoffset = xoffsetoverride;
                 StartPos = GenericMachinePanelScript.instance.gameObject.transform.localPosition;
                 GenericMachinePanelScript.instance.gameObject.transform.localScale = new Vector3(scalingfactorx, 1.0f, 1.0f);
-                GenericMachinePanelScript.instance.gameObject.transform.localPosition = StartPos + new Vector3(-xoffset, 0f, 0f);
+                GenericMachinePanelScript.instance.gameObject.transform.localPosition = StartPos + new Vector3(xoffset, 0f, 0f);
                 GenericMachinePanelScript.instance.Background_Panel.transform.localScale = new Vector3(scalingfactorx, 1.0f, 1.0f);
                 GenericMachinePanelScript.instance.Label_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
                 GenericMachinePanelScript.instance.Icon_Holder.transform.localScale = new Vector3(1f / scalingfactorx, 1.0f, 1.0f);
