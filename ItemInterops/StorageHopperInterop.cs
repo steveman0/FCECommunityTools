@@ -83,18 +83,18 @@ namespace FortressCraft.Community.ItemInterops
 		public ItemBase TakeAnyItem(SegmentEntity entity)
 		{
 			var hopper = entity.As<StorageHopper>();
-			if (hopper.mPermissions == StorageHopper.ePermissions.Locked || !hopper.mbAllowLogistics) {
+			if (hopper.mPermissions == eHopperPermissions.Locked || !hopper.mbAllowLogistics) {
 				return null;
 			}
 			ItemBase ret = null;
 			if (hopper.mnStorageUsed >= 1) {
 				ushort cubeType;
 				ushort cubeValue;
-				hopper.GetSpecificCubeRoundRobin(StorageHopper.eRequestType.eAny, out cubeType, out cubeValue);
+				hopper.GetSpecificCubeRoundRobin(eHopperRequestType.eAny, out cubeType, out cubeValue);
 				if (cubeType != 0) {
 					ret = ItemManager.SpawnCubeStack(cubeType, cubeValue, 1);
 				} else {
-					ret = hopper.RemoveSingleSpecificItemOrCubeRoundRobin(StorageHopper.eRequestType.eAny);
+					ret = hopper.RemoveSingleSpecificItemOrCubeRoundRobin(eHopperRequestType.eAny);
 				}
 			}
 			
